@@ -1,3 +1,6 @@
 [submodule "PythonRobotics"]
 	path = PythonRobotics
 	url = https://github.com/AtsushiSakai/PythonRobotics.git
+[submodule "PathPlanning"]
+	path = PathPlanning
+	url = https://github.com/zhm-real/PathPlanning.git
