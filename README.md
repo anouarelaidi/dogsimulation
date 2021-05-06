@@ -1,8 +1,16 @@
 # Projet pour le cours POG
 
-Étapes du projet
+### Étapes du projet
 
 - [x] Définir notre sujet
 - [ ] Coder le prototype dans le simulateur
 - [ ] Utiliser le lidar et la caméra
 - [ ] Utiliser le chien
+
+### Questions
+- Quels éléments doivent apparaître dans notre simulation ?
+
+### Problèmes rencontrés
+- [ ] 
+
+
