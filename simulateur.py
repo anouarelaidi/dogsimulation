@@ -327,7 +327,8 @@ class Dog:
             room.mur[self.y].pop(self.x)
         self.room = room
         self.cam = CameraSim(640, 480)
-        self.distmax = (self.largeur ** 2 + self.longueur ** 2) ** 0.5
+        # self.distmax = (self.largeur ** 2 + self.longueur ** 2) ** 0.5
+        self.distmax = math.hypot(self.largeur, self.longueur) #Test d'optimisation
 
     def pos(self):
         print("Position: ({},{})  - Rotation: {}".format(self.x, self.y, self.rot))
