@@ -19,7 +19,7 @@ def showmap(room, dog):
     plt.show()
     
 # Draw final path
-def showpath(room, dog, obstacle, path): 
+def showpath(room, dog, goal, obstacle, path): 
     fig,ax = plt.subplots(1,figsize=(7,7))
     
     width, height = room.largeur, room.longueur
@@ -44,7 +44,7 @@ def generateObstacle(room, radius):
                 obstacle.append((x+0.5,y+0.5,radius))
     return obstacle
 
-def generatepath(goal, obstacle):
+def generatepath(room, dog, goal, obstacle, max_iter=300, search_until_max_iter=False):
     # Set Initial parameters
     rrt_star = RRTStar(
         start=[dog.x, dog.y],
@@ -52,15 +52,15 @@ def generatepath(goal, obstacle):
         rand_area=[-2, 15],
         obstacle_list = obstacle,
         expand_dis=1,
-        max_iter=1000,
-        search_until_max_iter=True)
+        max_iter=max_iter,
+        search_until_max_iter=search_until_max_iter)
     path = rrt_star.planning(animation=False)
 
     if path is None:
         print("Cannot find path")
     else:
         print("found path!!")
-        showpath(room, dog, obstacle, path)
+        # showpath(room, dog, obstacle, path)
     return path
 
 def MoveToPoint(dog, x, y):
@@ -83,6 +83,7 @@ def MoveToPoint(dog, x, y):
     det = np.linalg.det(np.array([mov_vector, [1,0]])) # Vecteur x unitaire
     angle = np.degrees(np.arctan2(det, dot)) #problème d'angle hors intervalle parfois
     rot = angle - curr_angle
+    rot = np.sign(rot)*(np.abs(rot)%360)
     
     #Debugging
     print("Current X: {}, Current Y: {}".format(pos[0], pos[1]))
@@ -100,7 +101,7 @@ def MoveToPoint(dog, x, y):
     
     
 #Utilise le path généré pour déplacer le chien
-def MoveUsingPath(dog, path):
+def MoveUsingPath(room, dog, path):
     keypoints = path.copy()
     keypoints.reverse()
 
