@@ -10,7 +10,5 @@
 ### Questions
 - Quels éléments doivent apparaître dans notre simulation ?
 
-### Problèmes rencontrés
-- [ ] 
 
 
