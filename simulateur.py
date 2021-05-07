@@ -186,8 +186,8 @@ class DogRoom:
         elif room != "default":
             if room[-4:] != ".csv":
                 room += ".csv"
-            self.mapimg = [] #Ajouté pour avoir le imshow plus facilement
             self.mur = []
+            self.imgdf = pd.read_csv(room, header=None, sep=';') #crée le DataFrame pour l'imshow
             fok = True
             f = open(room, "r")
             largeur = -1
@@ -201,13 +201,9 @@ class DogRoom:
                     print("Ligne ", longueur, " ignoree")
                 else:
                     self.mur.append([])
-                    self.mapimg.append([])
                     for i in range(largeur):  
                         if liste[i].strip() != "0":
-                            self.mapimg[longueur].append(1) 
                             self.mur[longueur].append(i)
-                        else:
-                            self.mapimg[longueur].append(0) 
                     longueur += 1
             f.close()
         else:
@@ -215,7 +211,6 @@ class DogRoom:
 
         self.largeur = largeur
         self.longueur = longueur
-        self.imgdf = pd.DataFrame(self.mapimg) #crée le DataFrame pour l'imshow
 
     def plotmap(self, couleur="black", chien=None):
         print("Dimension: {} x {}".format(self.longueur, self.largeur))
