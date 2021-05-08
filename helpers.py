@@ -52,10 +52,10 @@ def showmap(room, dog = None, human = None, goal = None, obstacle = None, path =
 
 def generateObstacle(room, radius):
     obstacle = []
-    for y in range(len(room.imgdf)):
-        for x in range(len(room.imgdf.iloc[y])):
-            if room.imgdf.iloc[y][x]==1:
-                obstacle.append((x+0.5,y+0.5,radius))
+    for y in range(room.longueur):
+        for i in range(len(room.mur[y])):
+            x = room.mur[y][i]
+            obstacle.append((x+0.5,y+0.5,radius))
     return obstacle
 
 def generatepath(room, dog, goal, obstacle, max_iter=300, search_until_max_iter=False):
