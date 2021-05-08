@@ -4,34 +4,48 @@ import matplotlib.pyplot as plt
 
 from PythonRobotics.PathPlanning.RRTStar.rrt_star import RRTStar
 
-#plotting the map with imshow
-def showmap(room, dog):
-    dog_x, dog_y = dog.x, dog.y
-    height, width = room.imgdf.shape
-    # human_x, human_y = human.x, human.y
+# #plotting the map with imshow
+# def showmap(room, dog):
+#     dog_x, dog_y = dog.x, dog.y
+#     height, width = room.imgdf.shape
+#     # human_x, human_y = human.x, human.y
 
-    fig,ax = plt.subplots(1,figsize=(7,7))
-    fig = plt.plot(dog_x, dog_y, 's')
-    # fig = plt.plot(human_x, human_y, 'x')
+#     fig,ax = plt.subplots(1,figsize=(7,7))
+#     fig = plt.plot(dog_x, dog_y, 's')
+#     # fig = plt.plot(human_x, human_y, 'x')
     
-    ax.imshow(room.imgdf, origin='lower', interpolation='none', extent=(0, width, 0, height))
-    plt.gca().invert_yaxis()
-    plt.show()
+#     ax.imshow(room.imgdf, origin='lower', interpolation='none', extent=(0, width, 0, height))
+#     plt.gca().invert_yaxis()
+#     plt.show()
     
 # Draw final path
-def showpath(room, dog, goal, obstacle, path): 
+def showmap(room, dog = None, human = None, goal = None, obstacle = None, path = None): 
+    """
+    Affiche la carte
+    room: objet de classe DogRoom (obligatoire)
+    dog: objet de classe Dog
+    human: objet de classe Human
+    goal: array des coordonnées du point destination [x,y]
+    obstacle: array des tuples des obstacles (x,y,radius)
+    path: array des points intermédiaires sur le chemin [[x1,y1],[x2,y2],...]
+    """
     fig,ax = plt.subplots(1,figsize=(7,7))
-    
     width, height = room.largeur, room.longueur
-
-    plt.plot([x for (x, y) in path], [y for (x, y) in path], 'r--') #Plotting the path
-    plt.plot([x for (x, y) in path], [y for (x, y) in path], 'o', color='green') #Plotting the path
-    plt.plot(dog.x, dog.y, 'o', color='blue')
-    plt.plot(goal[0],goal[1],'x', color='orange')
-
-    for (x, y, radius) in obstacle:
-        cir = plt.Circle((x, y), radius, color='r', alpha=0.5, fill=True)
-        ax.add_patch(cir)
+   
+    if dog is not None:
+        plt.plot(dog.x, dog.y, 'o', color='blue')
+    if human is not None:
+        plt.plot(human.x, human.y, 's', color='blue')
+    if path is not None:
+        plt.plot([x for (x, y) in path], [y for (x, y) in path], 'r--') #Plotting the path
+        plt.plot([x for (x, y) in path], [y for (x, y) in path], 'o', color='green') #Plotting the path points
+    if goal is not None:
+        plt.plot(goal[0],goal[1],'x', color='orange')
+    if obstacle is not None:
+        for (x, y, radius) in obstacle:
+            cir = plt.Circle((x, y), radius, color='r', alpha=0.3, fill=True)
+            ax.add_patch(cir)
+    
     ax.imshow(room.imgdf, origin='lower', interpolation='none', extent=(0, width, 0, height))
     plt.gca().invert_yaxis()
     plt.show()
@@ -49,9 +63,12 @@ def generatepath(room, dog, goal, obstacle, max_iter=300, search_until_max_iter=
     rrt_star = RRTStar(
         start=[dog.x, dog.y],
         goal=goal,
-        rand_area=[-2, 15],
+        rand_area=[-100, 100],
         obstacle_list = obstacle,
-        expand_dis=1,
+        expand_dis=30.0,
+        path_resolution=2.0,
+        goal_sample_rate=20,
+        connect_circle_dist=50.0,
         max_iter=max_iter,
         search_until_max_iter=search_until_max_iter)
     path = rrt_star.planning(animation=False)
@@ -60,7 +77,6 @@ def generatepath(room, dog, goal, obstacle, max_iter=300, search_until_max_iter=
         print("Cannot find path")
     else:
         print("found path!!")
-        # showpath(room, dog, obstacle, path)
     return path
 
 def MoveToPoint(dog, x, y):
