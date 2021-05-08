@@ -7,8 +7,16 @@
 - [ ] Utiliser le lidar et la caméra
 - [ ] Utiliser le chien
 
-### Questions
-- Quels éléments doivent apparaître dans notre simulation ?
+### Milestones
+- Implémentation de fonctions de déplacement (`MoveToPoint` et `MoveUsingPath`)
+- Optimisation de l'affichage grâce à `showmap`
+- Implémentation du RRT*
+- Implémentation du DStar Lite
+
+### To-do 
+- Implémentation de l'ajout d'obstacle
+- Implémentation de la détection dynamique d'obstacle
+- Implémentation des graphiques dynamiques
 
 
 
