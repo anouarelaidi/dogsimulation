@@ -35,7 +35,7 @@ def showmap(room, dog = None, human = None, goal = None, obstacle = None, path =
     if dog is not None:
         plt.plot(dog.x, dog.y, 'o', color='blue')
     if human is not None:
-        plt.plot(human.x, human.y, 's', color='blue')
+        plt.plot(human.x, human.y, 's', color='red')
     if path is not None:
         plt.plot([x for (x, y) in path], [y for (x, y) in path], 'r--') #Plotting the path
         plt.plot([x for (x, y) in path], [y for (x, y) in path], 'o', color='green') #Plotting the path points
@@ -95,6 +95,7 @@ def MoveToPoint(dog, x, y):
     dist = np.linalg.norm(mov_vector)
 
     #Calcul du nouvel angle du chien
+    # Largement simplifiable
     dot = np.dot(mov_vector, [1,0])
     det = np.linalg.det(np.array([mov_vector, [1,0]])) # Vecteur x unitaire
     angle = np.degrees(np.arctan2(det, dot)) #problème d'angle hors intervalle parfois
@@ -119,7 +120,7 @@ def MoveToPoint(dog, x, y):
 #Utilise le path généré pour déplacer le chien
 def MoveUsingPath(room, dog, path):
     keypoints = path.copy()
-    keypoints.reverse()
+    # keypoints.reverse()
 
     for x,y in keypoints[1:]:
         MoveToPoint(dog, x, y)
