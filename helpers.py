@@ -4,22 +4,7 @@ import matplotlib.pyplot as plt
 
 from PythonRobotics.PathPlanning.RRTStar.rrt_star import RRTStar
 
-# #plotting the map with imshow
-# def showmap(room, dog):
-#     dog_x, dog_y = dog.x, dog.y
-#     height, width = room.imgdf.shape
-#     # human_x, human_y = human.x, human.y
-
-#     fig,ax = plt.subplots(1,figsize=(7,7))
-#     fig = plt.plot(dog_x, dog_y, 's')
-#     # fig = plt.plot(human_x, human_y, 'x')
-    
-#     ax.imshow(room.imgdf, origin='lower', interpolation='none', extent=(0, width, 0, height))
-#     plt.gca().invert_yaxis()
-#     plt.show()
-    
-# Draw final path
-def showmap(room, dog = None, human = None, goal = None, obstacle = None, path = None): 
+def showmap(room, dog = None, human = None, goal = None, obstacle = None, path = None):
     """
     Affiche la carte
     room: objet de classe DogRoom (obligatoire)
@@ -31,7 +16,7 @@ def showmap(room, dog = None, human = None, goal = None, obstacle = None, path =
     """
     fig,ax = plt.subplots(1,figsize=(7,7))
     width, height = room.largeur, room.longueur
-   
+
     if dog is not None:
         plt.plot(dog.x, dog.y, 'o', color='blue')
     if human is not None:
@@ -45,12 +30,18 @@ def showmap(room, dog = None, human = None, goal = None, obstacle = None, path =
         for (x, y, radius) in obstacle:
             cir = plt.Circle((x, y), radius, color='r', alpha=0.3, fill=True)
             ax.add_patch(cir)
-    
+
     ax.imshow(room.imgdf, origin='lower', interpolation='none', extent=(0, width, 0, height))
     plt.gca().invert_yaxis()
     plt.show()
 
 def generateObstacle(room, radius):
+    """
+    Génère des obstacles basé sur la carte du Simulateur.
+    Les obstacles sont de format (x, y, rayon).
+    room: Objet DogRoom,
+    radius: rayon des obstacles
+    """
     obstacle = []
     for y in range(room.longueur):
         for i in range(len(room.mur[y])):
@@ -59,7 +50,7 @@ def generateObstacle(room, radius):
     return obstacle
 
 def generatepath(room, dog, goal, obstacle, max_iter=300, search_until_max_iter=False):
-    # Set Initial parameters
+    #Fonction utile?
     rrt_star = RRTStar(
         start=[dog.x, dog.y],
         goal=goal,
@@ -80,28 +71,26 @@ def generatepath(room, dog, goal, obstacle, max_iter=300, search_until_max_iter=
     return path
 
 def MoveToPoint(dog, x, y):
-    
-#     unit_vector_x = [1,0]
-  
-    #Récupérer les infos sur le chien
+
+    #Récupérer la position et l'angle du chien
     pos = np.array([dog.x, dog.y])
     curr_angle = dog.rot
 
     #Définir le vecteur déplacement
     goal = np.array([x,y])
     mov_vector = goal - pos
-    
+
     #Calcul de la distance à parcourir
     dist = np.linalg.norm(mov_vector)
 
     #Calcul du nouvel angle du chien
-    # Largement simplifiable
+    # Sûrement largement simplifiable, mais tjrs garder le arctan2 je pense
     dot = np.dot(mov_vector, [1,0])
-    det = np.linalg.det(np.array([mov_vector, [1,0]])) # Vecteur x unitaire
-    angle = np.degrees(np.arctan2(det, dot)) #problème d'angle hors intervalle parfois
+    det = np.linalg.det(np.array([mov_vector, [1,0]])) # Vecteur x_unitaire
+    angle = np.degrees(np.arctan2(det, dot))
     rot = angle - curr_angle
-    rot = np.sign(rot)*(np.abs(rot)%360)
-    
+    rot = np.sign(rot)*(np.abs(rot)%360) #Pour résoudre les problèmes d'angle hors intervalle admissible
+
     #Debugging
     print("Current X: {}, Current Y: {}".format(pos[0], pos[1]))
     print("Goal X: {}, Goal Y: {}".format(x,y))
@@ -109,20 +98,28 @@ def MoveToPoint(dog, x, y):
     print("Angle relatif {}".format(rot))
     print("Distance à parcourir {}".format(dist))
     print("--------------")
-    
-    #Voir si on doit ajouter qqch en fct de la speed du chien
 
-    #Appliquer les fonctions du simulateur
+    #Voir si on doit ajouter qqch en fct de la speed du chien
+    #Semble pas être le cas car fonctionne ainsi
+
+    #Applique les fonctions du simulateur
     dog.rotate(rot)
     dog.forward(dist)
-    
-    
-#Utilise le path généré pour déplacer le chien
-def MoveUsingPath(room, dog, path):
-    keypoints = path.copy()
-    # keypoints.reverse()
 
+
+#Utilise le path généré pour déplacer le chien
+def MoveUsingPath(room, dog, path, reverse=False, limit=None):
+    """
+    Déplace un chien en suivant un path (Array de keypoints intermédiaires)
+    """
+    keypoints = path.copy()
+    if reverse:
+        keypoints.reverse()
+    i=0
     for x,y in keypoints[1:]:
         MoveToPoint(dog, x, y)
+        i+=1
+        if i == limit:
+            break
     showmap(room, dog)
     return True
