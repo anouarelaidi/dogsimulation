@@ -15,6 +15,6 @@
 
 ### To-do 
 - Implémentation de l'ajout d'obstacle
-- Implémentation de la détection dynamique d'obstacle
+- Implémentation de la détection dynamique d'obstacle (ou pas?)
 - Implémentation d'une interface graphique (voir les mouvements du chien sur la map en live)
 - Incorporation des `automove.py` et `movealiengo.cpp` pour connecter le code au chien-robot 
