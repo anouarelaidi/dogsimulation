@@ -18,3 +18,6 @@
 - Implémentation de la détection dynamique d'obstacle (ou pas?)
 - Implémentation d'une interface graphique (voir les mouvements du chien sur la map en live)
 - Incorporation des `automove.py` et `movealiengo.cpp` pour connecter le code au chien-robot 
+
+### Questions
+- Qu'est-ce qui ne fonctionne pas avec `unitree_legged_sdk`?
