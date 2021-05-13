@@ -4,3 +4,21 @@
 [submodule "PathPlanning"]
 	path = PathPlanning
 	url = https://github.com/zhm-real/PathPlanning.git
+[submodule "unitree_legged_sdk"]
+	path = unitree_legged_sdk
+	url = https://github.com/Codeternel/unitree_legged_sdk.git
+[submodule "278652"]
+	path = 278652
+	url = https://gist.github.com/278652.git
+[submodule "ca31606aef73ec89f65dcf54ca74c55f"]
+	path = ca31606aef73ec89f65dcf54ca74c55f
+	url = https://gist.github.com/ca31606aef73ec89f65dcf54ca74c55f.git
+[submodule "netinet"]
+	path = netinet
+	url = https://github.com/afabbro/netinet
+[submodule "src"]
+	path = src
+	url = https://github.com/openbsd/src
+[submodule "glibc"]
+	path = glibc
+	url = https://github.com/lattera/glibc
