@@ -117,7 +117,6 @@ def MoveUsingPath(room, dog, path, reverse=False, limit=None):
         keypoints.reverse()
     for i, (x, y) in enumerate(keypoints[1:], start=1):
         MoveToPoint(dog, x, y)
-        print
         if i == limit:
             break
     showmap(room, dog)
