@@ -21,7 +21,8 @@
                     "${workspaceFolder}/**"
                 ],
                 "limitSymbolsToIncludedHeaders": true
-            }
+            },
+            "compileCommands": "${workspaceFolder}/src/gnu/llvm/clang/bindings/python/tests/cindex/INPUTS/compile_commands.json"
         },
         {
             "name": "GCC",
