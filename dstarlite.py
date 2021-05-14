@@ -1,3 +1,5 @@
+from simulateur import DogRoom
+
 """
 Env 2D
 @author: huiming zhou
