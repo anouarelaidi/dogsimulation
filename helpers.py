@@ -99,9 +99,6 @@ def MoveToPoint(dog, x, y):
     print("Distance à parcourir {}".format(dist))
     print("--------------")
 
-    #Voir si on doit ajouter qqch en fct de la speed du chien
-    #Semble pas être le cas car fonctionne ainsi
-
     #Applique les fonctions du simulateur
     dog.rotate(rot)
     dog.forward(dist)

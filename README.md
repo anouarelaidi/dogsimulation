@@ -18,6 +18,7 @@
 - Implémentation de la détection dynamique d'obstacle (ou pas?)
 - Implémentation d'une interface graphique (voir les mouvements du chien sur la map en live)
 - Incorporation des `automove.py` et `movealiengo.cpp` pour connecter le code au chien-robot 
+- Comment intégrer `room` à `Env`? 
 
 ### Questions
 - Pourquoi cela ne suffit-il pas de rajouter la classe `DogRoom` dans `dstarlite.py` pour qu'il comprenne ce que veut dire `room`? 

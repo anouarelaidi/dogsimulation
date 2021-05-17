@@ -1,5 +1,3 @@
-from simulateur import DogRoom
-
 """
 Env 2D
 @author: huiming zhou
@@ -49,39 +47,6 @@ class Plotting:
     def animation(self, path, visited, name):
         self.plot_grid(name)
         self.plot_visited(visited)
-        self.plot_path(path)
-        plt.show()
-
-    def animation_lrta(self, path, visited, name):
-        self.plot_grid(name)
-        cl = self.color_list_2()
-        path_combine = []
-
-        for k in range(len(path)):
-            self.plot_visited(visited[k], cl[k])
-            plt.pause(0.2)
-            self.plot_path(path[k])
-            path_combine += path[k]
-            plt.pause(0.2)
-        if self.xI in path_combine:
-            path_combine.remove(self.xI)
-        self.plot_path(path_combine)
-        plt.show()
-
-    def animation_ara_star(self, path, visited, name):
-        self.plot_grid(name)
-        cl_v, cl_p = self.color_list()
-
-        for k in range(len(path)):
-            self.plot_visited(visited[k], cl_v[k])
-            self.plot_path(path[k], cl_p[k], True)
-            plt.pause(0.5)
-
-        plt.show()
-
-    def animation_bi_astar(self, path, v_fore, v_back, name):
-        self.plot_grid(name)
-        self.plot_visited_bi(v_fore, v_back)
         self.plot_path(path)
         plt.show()
 
@@ -137,28 +102,6 @@ class Plotting:
 
         plt.pause(0.01)
 
-    def plot_visited_bi(self, v_fore, v_back):
-        if self.xI in v_fore:
-            v_fore.remove(self.xI)
-
-        if self.xG in v_back:
-            v_back.remove(self.xG)
-
-        len_fore, len_back = len(v_fore), len(v_back)
-
-        for k in range(max(len_fore, len_back)):
-            if k < len_fore:
-                plt.plot(v_fore[k][0], v_fore[k][1], linewidth='3', color='gray', marker='o')
-            if k < len_back:
-                plt.plot(v_back[k][0], v_back[k][1], linewidth='3', color='cornflowerblue', marker='o')
-
-            plt.gcf().canvas.mpl_connect('key_release_event',
-                                         lambda event: [exit(0) if event.key == 'escape' else None])
-
-            if k % 10 == 0:
-                plt.pause(0.001)
-        plt.pause(0.01)
-
     @staticmethod
     def color_list():
         cl_v = ['silver',
@@ -193,15 +136,8 @@ D_star_Lite 2D
 @author: huiming zhou
 """
 
-import os
-import sys
 import math
 import matplotlib.pyplot as plt
-
-# sys.path.append(os.path.dirname(os.path.abspath(__file__)) +
-#                 "/../../Search_based_Planning/")
-
-# from PathPlanning.Search_based_Planning.Search_2D import plotting
 
 
 class DStar:
@@ -279,7 +215,7 @@ class DStar:
                     self.visited = set()
                     self.ComputePath()
 
-            # self.plot_visited(self.visited)
+            self.plot_visited(self.visited)
             self.plot_path(path)
             self.fig.canvas.draw_idle()
 
