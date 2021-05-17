@@ -20,6 +20,7 @@
 - Incorporation des `automove.py` et `movealiengo.cpp` pour connecter le code au chien-robot 
 - Comment intégrer `room` à `Env`? 
 - Améliorer l'interface dynamique 
+- Relance M. Schyns: quid position robot? Ou coder nous-même? Ou rien?
 
 ### Questions
 - Y a-t-il une boucle entre `lcm.h` et `lcm-cpp.hpp` (dans `unitree_legged_sdk.h`)? Si oui, comment régler ça? 
