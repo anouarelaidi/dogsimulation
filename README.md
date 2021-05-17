@@ -20,8 +20,7 @@
 - Incorporation des `automove.py` et `movealiengo.cpp` pour connecter le code au chien-robot 
 
 ### Questions
-- Qu'est-ce qui ne fonctionne pas avec `unitree_legged_sdk`?
 - Pourquoi cela ne suffit-il pas de rajouter la classe `DogRoom` dans `dstarlite.py` pour qu'il comprenne ce que veut dire `room`? 
-- Y a-t-il une boucle entre `lcm.h` et `lcm-cpp.hpp`? Si oui, comment régler ça? 
+- Y a-t-il une boucle entre `lcm.h` et `lcm-cpp.hpp` (dans `unitree_legged_sdk.h`)? Si oui, comment régler ça? 
 - Où se trouve `lcm_export.h` ? 
-- Problème avec des parties du code de `pthread.h` 
+- Problème avec des parties du code de `pthread.h`: comment les régler? Est-ce des fautes? 
