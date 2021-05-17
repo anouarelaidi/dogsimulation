@@ -22,3 +22,9 @@
 [submodule "glibc"]
 	path = glibc
 	url = https://github.com/lattera/glibc
+[submodule "arduino-boost"]
+	path = arduino-boost
+	url = https://github.com/vancegroup/arduino-boost.git
+[submodule "lcm"]
+	path = lcm
+	url = https://github.com/lcm-proj/lcm.git
