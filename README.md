@@ -22,4 +22,4 @@
 ### Questions
 - Qu'est-ce qui ne fonctionne pas avec `unitree_legged_sdk`?
 - Pourquoi cela ne suffit-il pas de rajouter la classe `DogRoom` dans `dstarlite.py` pour qu'il comprenne ce que veut dire `room`? 
-- Y a-t-il une boucle entre les fichiers `lcm.h` et `lcm-cpp.hpp`? Si oui, comment le résoudre? 
+- Problème avec des parties du code de `pthread.h` 
