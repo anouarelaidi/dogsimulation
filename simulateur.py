@@ -187,7 +187,6 @@ class DogRoom:
             if room[-4:] != ".csv":
                 room += ".csv"
             self.mur = []
-            self.imgdf = pd.read_csv(room, header=None, sep=';') #crée le DataFrame pour l'imshow
             fok = True
             f = open(room, "r")
             largeur = -1

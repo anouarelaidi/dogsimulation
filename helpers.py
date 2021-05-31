@@ -1,8 +1,18 @@
 import numpy as np
-import pandas as pd
 import matplotlib.pyplot as plt
 
 from PythonRobotics.PathPlanning.RRTStar.rrt_star import RRTStar
+
+def createImgRoom(room):
+    """
+    Ajoute un élément à un objet Room
+    Crée un array où chaque élément est un pixel de la carte, avec 0 pour le vide et 1 pour les murs
+    Utile pour ensuite afficher la carte grâce à un imshow, beaucoup plus rapide qu'un plt.plot pour une grande carte.
+    """
+    room.img = np.zeros((room.longueur,room.largeur))
+    for y in range(len(room.mur)):
+        for x in range(len(room.mur[y])):
+            room.img[y][room.mur[y][x]] = 1
 
 def showmap(room, dog = None, human = None, goal = None, obstacle = None, path = None):
     """
@@ -23,7 +33,7 @@ def showmap(room, dog = None, human = None, goal = None, obstacle = None, path =
         plt.plot(human.x, human.y, 's', color='red')
     if path is not None:
         plt.plot([x for (x, y) in path], [y for (x, y) in path], 'r--') #Plotting the path
-        plt.plot([x for (x, y) in path], [y for (x, y) in path], 'o', color='green') #Plotting the path points
+        plt.plot([x for (x, y) in path], [y for (x, y) in path], 'o', color='green', ms=2) #Plotting the path points
     if goal is not None:
         plt.plot(goal[0],goal[1],'x', color='orange')
     if obstacle is not None:
@@ -31,11 +41,11 @@ def showmap(room, dog = None, human = None, goal = None, obstacle = None, path =
             cir = plt.Circle((x, y), radius, color='r', alpha=0.3, fill=True)
             ax.add_patch(cir)
 
-    ax.imshow(room.imgdf, origin='lower', interpolation='none', extent=(0, width, 0, height))
+    ax.imshow(room.img, origin='lower', interpolation='none', extent=(0, width, 0, height))
     plt.gca().invert_yaxis()
     plt.show()
 
-def generateObstacle(room, radius):
+def generateObstacleRRTStar(room, radius):
     """
     Génère des obstacles basé sur la carte du Simulateur.
     Les obstacles sont de format (x, y, rayon).
@@ -49,7 +59,7 @@ def generateObstacle(room, radius):
             obstacle.append((x+0.5,y+0.5,radius))
     return obstacle
 
-def generatepath(room, dog, goal, obstacle, max_iter=300, search_until_max_iter=False):
+def generatePathRRTStar(room, dog, goal, obstacle, max_iter=300, search_until_max_iter=False):
     #Fonction utile?
     rrt_star = RRTStar(
         start=[dog.x, dog.y],
@@ -105,7 +115,7 @@ def MoveToPoint(dog, x, y):
 
 
 #Utilise le path généré pour déplacer le chien
-def MoveUsingPath(room, dog, path, reverse=False, limit=None):
+def MoveUsingPath(room, dog, goal, path, reverse=False, limit=None):
     """
     Déplace un chien en suivant un path (Array de keypoints intermédiaires)
     """
@@ -116,5 +126,5 @@ def MoveUsingPath(room, dog, path, reverse=False, limit=None):
         MoveToPoint(dog, x, y)
         if i == limit:
             break
-    showmap(room, dog)
+    showmap(room=room, dog=dog, goal=goal)
     return True

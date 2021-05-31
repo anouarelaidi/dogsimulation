@@ -1,12 +1,20 @@
 """
-Env 2D
+D_star_Lite 2D
 @author: huiming zhou
+https://github.com/zhm-real/PathPlanning
 """
 
+
+import math
+import matplotlib.pyplot as plt
+
+
+# Permet de définir la carte pour l'algorithme.
 class Env:
-    def __init__(self):
-        self.x_range = room.largeur  # size of background
-        self.y_range = room.longueur
+    def __init__(self, room):
+        self.room = room
+        self.x_range = self.room.largeur  # size of background
+        self.y_range = self.room.longueur
         self.motions = [(-1, 0), (-1, 1), (0, 1), (1, 1),
                         (1, 0), (1, -1), (0, -1), (-1, -1)]
         self.obs = self.obs_map()
@@ -19,135 +27,28 @@ class Env:
         Initialize obstacles' positions
         :return: map of obstacles
         """
-
         x = self.x_range
         y = self.y_range
         obs = set()
 
-        for y in range(len(room.imgdf)):
-            for x in range(len(room.imgdf.iloc[y])):
-                if room.imgdf.iloc[y][x]==1:
+        for y in range(len(self.room.img)):
+            for x in range(len(self.room.img[y])):
+                if self.room.img[y][x]==1:
                     obs.add((x,y))
+                    # Ajoute une marge de sécurité autour des murs
                     obs.add((x-1,y))
                     obs.add((x+1,y))
                     obs.add((x,y+1))
                     obs.add((x,y-1))
         return obs
-
-
-class Plotting:
-    def __init__(self, xI, xG):
-        self.xI, self.xG = xI, xG
-        self.env = Env()
-        self.obs = self.env.obs_map()
-
-    def update_obs(self, obs):
-        self.obs = obs
-
-    def animation(self, path, visited, name):
-        self.plot_grid(name)
-        self.plot_visited(visited)
-        self.plot_path(path)
-        plt.show()
-
-    def plot_grid(self, name):
-        obs_x = [x[0] for x in self.obs]
-        obs_y = [x[1] for x in self.obs]
-
-        plt.plot(self.xI[0], self.xI[1], "bs")
-        plt.plot(self.xG[0], self.xG[1], "gs")
-        plt.plot(obs_x, obs_y, "sk")
-        plt.title(name)
-        plt.axis("equal")
-
-    def plot_visited(self, visited, cl='gray'):
-        if self.xI in visited:
-            visited.remove(self.xI)
-
-        if self.xG in visited:
-            visited.remove(self.xG)
-
-        count = 0
-
-        for x in visited:
-            count += 1
-            plt.plot(x[0], x[1], color=cl, marker='o')
-            plt.gcf().canvas.mpl_connect('key_release_event',
-                                         lambda event: [exit(0) if event.key == 'escape' else None])
-
-            if count < len(visited) / 3:
-                length = 20
-            elif count < len(visited) * 2 / 3:
-                length = 30
-            else:
-                length = 40
-            #
-            # length = 15
-
-            if count % length == 0:
-                plt.pause(0.001)
-        plt.pause(0.01)
-
-    def plot_path(self, path, cl='r', flag=False):
-        path_x = [path[i][0] for i in range(len(path))]
-        path_y = [path[i][1] for i in range(len(path))]
-
-        if not flag:
-            plt.plot(path_x, path_y, linewidth='3', color='r')
-        else:
-            plt.plot(path_x, path_y, linewidth='3', color=cl)
-
-        plt.plot(self.xI[0], self.xI[1], "bs")
-        plt.plot(self.xG[0], self.xG[1], "gs")
-
-        plt.pause(0.01)
-
-    @staticmethod
-    def color_list():
-        cl_v = ['silver',
-                'wheat',
-                'lightskyblue',
-                'royalblue',
-                'slategray']
-        cl_p = ['gray',
-                'orange',
-                'deepskyblue',
-                'red',
-                'm']
-        return cl_v, cl_p
-
-    @staticmethod
-    def color_list_2():
-        cl = ['silver',
-              'steelblue',
-              'dimgray',
-              'cornflowerblue',
-              'dodgerblue',
-              'royalblue',
-              'plum',
-              'mediumslateblue',
-              'mediumpurple',
-              'blueviolet',
-              ]
-        return cl
-
-"""
-D_star_Lite 2D
-@author: huiming zhou
-"""
-
-import math
-import matplotlib.pyplot as plt
-
-
+        
 class DStar:
-    def __init__(self, s_start, s_goal, heuristic_type):
+    def __init__(self, room, s_start, s_goal, heuristic_type):
         self.s_start, self.s_goal = s_start, s_goal
         self.heuristic_type = heuristic_type
 
-        self.Env = Env()  # class Env
-        self.Plot = Plotting(s_start, s_goal)
-
+        self.Env = Env(room)  # class Env
+        
         self.u_set = self.Env.motions  # feasible input set
         self.obs = self.Env.obs  # position of obstacles
         self.x = self.Env.x_range
@@ -165,59 +66,11 @@ class DStar:
         self.U[self.s_goal] = self.CalculateKey(self.s_goal)
         self.visited = set()
         self.count = 0
-        self.fig = plt.figure()
+
 
     def run(self):
-        self.Plot.plot_grid("D* Lite")
         self.ComputePath()
-        self.plot_path(self.extract_path())
-        self.fig.canvas.mpl_connect('button_press_event', self.on_press)
-        plt.show()
-
-    def on_press(self, event):
-        x, y = event.xdata, event.ydata
-        if x < 0 or x > self.x - 1 or y < 0 or y > self.y - 1:
-            print("Please choose right area!")
-        else:
-            x, y = int(x), int(y)
-            print("Change position: s =", x, ",", "y =", y)
-
-            s_curr = self.s_start
-            s_last = self.s_start
-            i = 0
-            path = [self.s_start]
-
-            while s_curr != self.s_goal:
-                s_list = {}
-
-                for s in self.get_neighbor(s_curr):
-                    s_list[s] = self.g[s] + self.cost(s_curr, s)
-                s_curr = min(s_list, key=s_list.get)
-                path.append(s_curr)
-
-                if i < 1:
-                    self.km += self.h(s_last, s_curr)
-                    s_last = s_curr
-                    if (x, y) not in self.obs:
-                        self.obs.add((x, y))
-                        plt.plot(x, y, 'sk')
-                        self.g[(x, y)] = float("inf")
-                        self.rhs[(x, y)] = float("inf")
-                    else:
-                        self.obs.remove((x, y))
-                        plt.plot(x, y, marker='s', color='white')
-                        self.UpdateVertex((x, y))
-                    for s in self.get_neighbor((x, y)):
-                        self.UpdateVertex(s)
-                    i += 1
-
-                    self.count += 1
-                    self.visited = set()
-                    self.ComputePath()
-
-            self.plot_visited(self.visited)
-            self.plot_path(path)
-            self.fig.canvas.draw_idle()
+        print("Algorithme exécuté")
 
     def ComputePath(self):
         while True:
@@ -322,7 +175,7 @@ class DStar:
         path = [self.s_start]
         s = self.s_start
 
-        for k in range(200):
+        for k in range(1000):
             g_list = {}
             for x in self.get_neighbor(s):
                 if not self.is_collision(s, x):
@@ -333,22 +186,3 @@ class DStar:
                 break
 
         return list(path)
-
-    def plot_path(self, path):
-        px = [x[0] for x in path]
-        py = [x[1] for x in path]
-        plt.plot(px, py, linewidth=2)
-        plt.plot(self.s_start[0], self.s_start[1], "bs")
-        plt.plot(self.s_goal[0], self.s_goal[1], "gs")
-
-    def plot_visited(self, visited):
-        color = ['gainsboro', 'lightgray', 'silver', 'darkgray',
-                 'bisque', 'navajowhite', 'moccasin', 'wheat',
-                 'powderblue', 'skyblue', 'lightskyblue', 'cornflowerblue']
-
-        if self.count >= len(color) - 1:
-            self.count = 0
-
-        for x in visited:
-            plt.plot(x[0], x[1], marker='s', color=color[self.count])
-

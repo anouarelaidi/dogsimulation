@@ -3,5 +3,7 @@
         "iostream": "cpp",
         "charconv": "cpp",
         "functional": "cpp"
-    }
+    },
+    "jupyter.jupyterServerType": "local",
+    "python.pythonPath": "C:\\Users\\Anouar Elaidi\\AppData\\Local\\Programs\\Python\\Python39\\python.exe"
 }
